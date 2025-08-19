@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  wealth-estimator-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: wealth-estimator-api
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount uploads directory to persist uploaded images
+      - ./uploads:/app/uploads
+      # Mount dataset directory for access to sample images
+      - ./dataset:/app/dataset
+      # Mount ChromaDB directory for persistent vector database
+      - ./chroma_db:/app/chroma_db
+      # For development: mount source code for hot reload
+      # Uncomment the following line if you want hot reload during development
+      # - ./main.py:/app/main.py
+    environment:
+      - PYTHONUNBUFFERED=1
+      - MODEL_CACHE_DIR=/app/models
+      - CHROMA_DB_PATH=/app/chroma_db
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - wealth-estimator-network
+
+networks:
+  wealth-estimator-network:
+    driver: bridge
