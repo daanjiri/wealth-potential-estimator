@@ -164,7 +164,6 @@ class WealthFaceDB:
             if similar_faces['count'] == 0:
                 return {
                     "predicted_wealth": 0,
-                    "confidence": 0,
                     "method": f"KNN-{k}",
                     "neighbors": [],
                     "error": "No similar faces found"
@@ -173,6 +172,7 @@ class WealthFaceDB:
             neighbors = similar_faces['query_results']
             
             if weighted:
+                # Weighted average based on similarity
                 total_weight = sum(face['similarity'] for face in neighbors)
                 if total_weight > 0:
                     predicted_wealth = sum(
@@ -181,14 +181,11 @@ class WealthFaceDB:
                 else:
                     predicted_wealth = np.mean([face['label'] for face in neighbors])
             else:
+                # Simple average
                 predicted_wealth = np.mean([face['label'] for face in neighbors])
-            
-            avg_similarity = np.mean([face['similarity'] for face in neighbors])
-            confidence = min(avg_similarity * 100, 100)
             
             return {
                 "predicted_wealth": float(predicted_wealth),
-                "confidence": float(confidence),
                 "method": f"KNN-{k}" + (" (weighted)" if weighted else ""),
                 "neighbors": neighbors,
                 "neighbor_count": len(neighbors)
@@ -198,7 +195,6 @@ class WealthFaceDB:
             logger.error(f"Wealth prediction failed: {e}")
             return {
                 "predicted_wealth": 0,
-                "confidence": 0,
                 "method": f"KNN-{k}",
                 "neighbors": [],
                 "error": str(e)

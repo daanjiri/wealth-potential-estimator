@@ -61,7 +61,6 @@ def test_predict_wealth(image_path: str, k: int = 3):
         print("✅ Wealth prediction successful")
         print(f"   Original filename: {data['original_filename']}")
         print(f"   Predicted wealth: {data['prediction']['predicted_wealth']:.2f}")
-        print(f"   Confidence: {data['prediction']['confidence']:.2f}%")
         print(f"   Method: {data['prediction']['method']}")
         print(f"   Number of neighbors: {data['prediction']['neighbor_count']}")
         
