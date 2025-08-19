@@ -1,0 +1,7 @@
+github repo: https://github.com/daanjiri/wealth-potential-estimator
+url enpoint: http://54.91.2.136:8000/predict-wealth
+Method: POST
+Body: multipart/form-data
+Parameters:
+file: The image file to be uploaded.
+k (optional): The number of neighbors to use for the prediction. Defaults to 3.
